@@ -893,6 +893,52 @@ namespace Barotrauma
                 if (s.gap != null) s.gap.ConnectedWall = this;
             }
         }
-        
+
+        public void WriteSpawnData(NetBuffer msg)
+        {
+            if (GameMain.Server == null) return;
+
+            msg.Write(ID);
+            msg.Write(Submarine.ID);
+
+            msg.Write(rect.X);
+            msg.Write(rect.Y);
+            msg.Write(rect.Width);
+            msg.Write(rect.Height);
+
+            msg.Write(spriteColor.PackedValue);
+
+            msg.Write((byte)StairDirection);
+
+            msg.Write(prefab.Name);
+        }
+
+        public static Structure ReadSpawnData(NetBuffer msg, bool spawn = true)
+        {
+            if (GameMain.Server != null) return null;
+            ushort structureID = msg.ReadUInt16();
+            ushort submarineID = msg.ReadUInt16();
+
+            int rectX = msg.ReadInt32();
+            int rectY = msg.ReadInt32();
+            int rectWidth = msg.ReadInt32();
+            int rectHeight = msg.ReadInt32();
+
+            uint spriteColorPacked = msg.ReadUInt32();
+            byte stairDir = msg.ReadByte();
+
+            string prefabName = msg.ReadString();
+
+            Rectangle rect = new Rectangle(rectX, rectY, rectWidth, rectHeight);
+            var structurePrefab = StructurePrefab.Find(prefabName) as StructurePrefab;
+            var submarine = Submarine.FindEntityByID(submarineID) as Submarine;
+
+            var structure = new Structure(rect, structurePrefab, submarine);
+            structure.Submarine = submarine;
+
+
+            return structure;
+        }
+
     }
 }

@@ -176,6 +176,8 @@ namespace Barotrauma
 
                         var structure = new Structure(newRect, this, Submarine.MainSub);
                         structure.Submarine = Submarine.MainSub;
+                        //if there is no network server then it will not be sync
+                        Entity.Spawner.CreateNetworkEvent(structure, false);
                     }
 
                     selected = null;

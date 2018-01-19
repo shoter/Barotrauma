@@ -74,15 +74,15 @@ namespace Barotrauma
             public UInt16 networkUpdateID;
         }
 
-        private List<NetInputMem> memInput  = new List<NetInputMem>();
+        private List<NetInputMem> memInput = new List<NetInputMem>();
 
-        private List<CharacterStateInfo> memState        = new List<CharacterStateInfo>();
-        private List<CharacterStateInfo> memLocalState   = new List<CharacterStateInfo>();
+        private List<CharacterStateInfo> memState = new List<CharacterStateInfo>();
+        private List<CharacterStateInfo> memLocalState = new List<CharacterStateInfo>();
 
         private bool networkUpdateSent;
 
         public bool isSynced = false;
-        
+
         public List<CharacterStateInfo> MemState
         {
             get { return memState; }
@@ -190,24 +190,24 @@ namespace Barotrauma
             {
                 var posInfo = new CharacterStateInfo(
                     SimPosition,
-                    LastNetworkUpdateID, 
-                    AnimController.TargetDir, 
+                    LastNetworkUpdateID,
+                    AnimController.TargetDir,
                     selectedCharacter == null ? (Entity)selectedConstruction : (Entity)selectedCharacter,
                     AnimController.Anim);
 
                 memLocalState.Add(posInfo);
 
                 InputNetFlags newInput = InputNetFlags.None;
-                if (IsKeyDown(InputType.Left))      newInput |= InputNetFlags.Left;
-                if (IsKeyDown(InputType.Right))     newInput |= InputNetFlags.Right;
-                if (IsKeyDown(InputType.Up))        newInput |= InputNetFlags.Up;
-                if (IsKeyDown(InputType.Down))      newInput |= InputNetFlags.Down;
-                if (IsKeyDown(InputType.Run))       newInput |= InputNetFlags.Run;
-                if (IsKeyDown(InputType.Crouch))    newInput |= InputNetFlags.Crouch;
-                if (IsKeyHit(InputType.Select))     newInput |= InputNetFlags.Select; //TODO: clean up the way this input is registered
-                if (IsKeyDown(InputType.Use))       newInput |= InputNetFlags.Use;
-                if (IsKeyDown(InputType.Aim))       newInput |= InputNetFlags.Aim;
-                if (IsKeyDown(InputType.Attack))    newInput |= InputNetFlags.Attack;
+                if (IsKeyDown(InputType.Left)) newInput |= InputNetFlags.Left;
+                if (IsKeyDown(InputType.Right)) newInput |= InputNetFlags.Right;
+                if (IsKeyDown(InputType.Up)) newInput |= InputNetFlags.Up;
+                if (IsKeyDown(InputType.Down)) newInput |= InputNetFlags.Down;
+                if (IsKeyDown(InputType.Run)) newInput |= InputNetFlags.Run;
+                if (IsKeyDown(InputType.Crouch)) newInput |= InputNetFlags.Crouch;
+                if (IsKeyHit(InputType.Select)) newInput |= InputNetFlags.Select; //TODO: clean up the way this input is registered
+                if (IsKeyDown(InputType.Use)) newInput |= InputNetFlags.Use;
+                if (IsKeyDown(InputType.Aim)) newInput |= InputNetFlags.Aim;
+                if (IsKeyDown(InputType.Attack)) newInput |= InputNetFlags.Attack;
 
                 if (AnimController.TargetDir == Direction.Left) newInput |= InputNetFlags.FacingLeft;
 
@@ -235,7 +235,7 @@ namespace Barotrauma
                 }
             }
             else //this == Character.Controlled && GameMain.Client == null
-            {                
+            {
                 AnimController.Frozen = false;
             }
 
@@ -250,7 +250,7 @@ namespace Barotrauma
                 networkUpdateSent = false;
             }
         }
-        
+
         public virtual void ServerRead(ClientNetObject type, NetBuffer msg, Client c)
         {
             if (GameMain.Server == null) return;
@@ -270,7 +270,7 @@ namespace Barotrauma
                     UInt16 networkUpdateID = msg.ReadUInt16();
                     byte inputCount = msg.ReadByte();
 
-                    if (AllowInput) Enabled = true;                   
+                    if (AllowInput) Enabled = true;
 
                     for (int i = 0; i < inputCount; i++)
                     {
@@ -284,7 +284,7 @@ namespace Barotrauma
                         }
                         if (newInput.HasFlag(InputNetFlags.Select) || newInput.HasFlag(InputNetFlags.Use))
                         {
-                            newInteract = msg.ReadUInt16();                 
+                            newInteract = msg.ReadUInt16();
                         }
 
                         if (AllowInput)
@@ -316,7 +316,7 @@ namespace Barotrauma
                     break;
 
                 case ClientNetObject.ENTITY_STATE:
-                    int eventType = msg.ReadRangedInteger(0,2);
+                    int eventType = msg.ReadRangedInteger(0, 2);
                     switch (eventType)
                     {
                         case 0:
@@ -360,7 +360,7 @@ namespace Barotrauma
 
             if (extraData != null)
             {
-                
+
                 switch ((NetEntityEvent.Type)extraData[0])
                 {
                     case NetEntityEvent.Type.InventoryState:
@@ -580,6 +580,9 @@ namespace Barotrauma
                 msg.Write("");
             }
         }
-        
+
+
+
+
     }
 }

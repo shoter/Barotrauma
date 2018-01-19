@@ -30,6 +30,9 @@ namespace Barotrauma
                     case (byte)SpawnableType.Character:
                         Character.ReadSpawnData(message, true);
                         break;
+                    case (byte)SpawnableType.Structure:
+                        Structure.ReadSpawnData(message, true);
+                        break;
                     default:
                         DebugConsole.ThrowError("Received invalid entity spawn message (unknown spawnable type)");
                         break;

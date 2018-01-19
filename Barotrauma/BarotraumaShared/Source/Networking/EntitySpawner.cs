@@ -8,7 +8,7 @@ namespace Barotrauma
     {
         const int MaxEntitiesPerWrite = 10;
 
-        private enum SpawnableType { Item, Character };
+        private enum SpawnableType { Item, Character, Structure };
         
         interface IEntitySpawnInfo
         {
@@ -183,8 +183,14 @@ namespace Barotrauma
                 else if (entities.Entity is Character)
                 {
                     message.Write((byte)SpawnableType.Character);
-                    DebugConsole.NewMessage("WRITING CHARACTER DATA: " + (entities.Entity).ToString(),Color.Cyan);
+                    DebugConsole.NewMessage("WRITING CHARACTER DATA: " + (entities.Entity).ToString(), Color.Cyan);
                     ((Character)entities.Entity).WriteSpawnData(message);
+                }
+                else if (entities.Entity is Structure)
+                {
+                    message.Write((byte)SpawnableType.Structure);
+                    DebugConsole.NewMessage("WRITING STRUCTURE DATA: " + (entities.Entity).ToString(), Color.Cyan);
+                    ((Structure)entities.Entity).WriteSpawnData(message);
                 }
             }
         }
