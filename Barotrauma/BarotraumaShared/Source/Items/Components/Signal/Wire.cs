@@ -220,7 +220,11 @@ namespace Barotrauma.Items.Components
                 return;
             }
 
-            newNodePos = RoundNode(item.Position, item.CurrentHull) - sub.HiddenSubPosition;
+           // newNodePos = RoundNode(item.Position, item.CurrentHull) - sub.HiddenSubPosition;
+
+            newNodePos = GameMain.GameScreen.Cam.ScreenToWorld(PlayerInput.MousePosition) - sub.HiddenSubPosition - sub.Position;
+            newNodePos.X = MathUtils.Round(newNodePos.X, Submarine.GridSize.X / 2.0f);
+            newNodePos.Y = MathUtils.Round(newNodePos.Y, Submarine.GridSize.Y / 2.0f);
         }
 
         public override bool Use(float deltaTime, Character character = null)
