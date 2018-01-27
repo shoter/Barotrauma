@@ -74,6 +74,9 @@ namespace Barotrauma.Items.Components
 
             if (IsActive && nodes.Count > 0 && Vector2.Distance(newNodePos, nodes[nodes.Count - 1]) > nodeDistance)
             {
+                //draw wires only for player that is actually connecting those wires!
+                if(Character.Controlled == Item.ParentInventory.Owner)
+                   
                 WireSection.Draw(
                     spriteBatch,
                     new Vector2(nodes[nodes.Count - 1].X, nodes[nodes.Count - 1].Y) + drawOffset,

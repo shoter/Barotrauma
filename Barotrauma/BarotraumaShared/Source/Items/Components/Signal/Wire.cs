@@ -208,6 +208,9 @@ namespace Barotrauma.Items.Components
 
         public override void Update(float deltaTime, Camera cam)
         {
+            if (item.ParentInventory != null && item.ParentInventory.Owner != Character.Controlled)
+                return;
+
             if (nodes.Count == 0) return;
 
             Submarine sub = null;
@@ -220,11 +223,25 @@ namespace Barotrauma.Items.Components
                 return;
             }
 
-           // newNodePos = RoundNode(item.Position, item.CurrentHull) - sub.HiddenSubPosition;
+            Vector2 playerSubPosition = Character.Controlled.WorldPosition - sub.HiddenSubPosition - sub.Position;
 
             newNodePos = GameMain.GameScreen.Cam.ScreenToWorld(PlayerInput.MousePosition) - sub.HiddenSubPosition - sub.Position;
             newNodePos.X = MathUtils.Round(newNodePos.X, Submarine.GridSize.X / 2.0f);
             newNodePos.Y = MathUtils.Round(newNodePos.Y, Submarine.GridSize.Y / 2.0f);
+
+            float distanceFromPlayer = Vector2.Distance(newNodePos, playerSubPosition);
+
+            if (distanceFromPlayer > 120f)
+            {
+
+                newNodePos = (newNodePos - playerSubPosition);
+                newNodePos.Normalize();
+                newNodePos += playerSubPosition + newNodePos * 120f;
+            }
+
+            newNodePos.X = MathUtils.Round(newNodePos.X, Submarine.GridSize.X / 2.0f);
+            newNodePos.Y = MathUtils.Round(newNodePos.Y, Submarine.GridSize.Y / 2.0f);
+
         }
 
         public override bool Use(float deltaTime, Character character = null)
