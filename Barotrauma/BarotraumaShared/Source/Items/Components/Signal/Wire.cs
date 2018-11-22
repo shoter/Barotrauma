@@ -256,19 +256,32 @@ namespace Barotrauma.Items.Components
                 }
                 else
                 {
-                    Vector2 newPos = item.Position;
+                    newNodePos = RoundNode(item.Position, item.CurrentHull) - sub.HiddenSubPosition;
 
                     if (item.ParentInventory?.Owner == Character.Controlled)
                     {
-                        newPos = GameMain.GameScreen.Cam.ScreenToWorld(PlayerInput.MousePosition) - sub.Position;
+                        Vector2 newPos = GameMain.GameScreen.Cam.ScreenToWorld(PlayerInput.MousePosition) - sub.Position;
                         var distance = Vector2.Distance(newPos, Character.Controlled.Position);
 
-                        if (distance > 110f)
-                            newPos = item.Position;
+                        if (distance < 110f)
+                            newNodePos = RoundNode(newPos, null) - sub.HiddenSubPosition;
                     }
 
-                    newNodePos = RoundNode(newPos, item.CurrentHull) - sub.HiddenSubPosition;
                     canPlaceNode = true;
+
+                    //Do not place cable if you open some panel
+                    if (Character.Controlled?.FocusedItem != null)
+                    {
+                        var item = Character.Controlled.FocusedItem;
+
+                        foreach(var ic in item.components.Where(x => x is ConnectionPanel))
+                        {
+                            if (ic.CanBeSelected)
+                                canPlaceNode = false;
+                        }
+                    }
+
+                    
                 }
 
                 //prevent the wire from extending too far when rewiring
