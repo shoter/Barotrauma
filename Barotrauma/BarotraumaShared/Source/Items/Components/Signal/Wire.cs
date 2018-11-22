@@ -256,17 +256,18 @@ namespace Barotrauma.Items.Components
                 }
                 else
                 {
-                    newNodePos = RoundNode(item.Position, item.CurrentHull) - sub.HiddenSubPosition;
+                    newNodePos = RoundNode(item.Position, item.CurrentHull);
 
                     if (item.ParentInventory?.Owner == Character.Controlled)
                     {
-                        Vector2 newPos = GameMain.GameScreen.Cam.ScreenToWorld(PlayerInput.MousePosition) - sub.Position;
+                        Vector2 newPos = GameMain.GameScreen.Cam.ScreenToWorld(PlayerInput.MousePosition) ;
                         var distance = Vector2.Distance(newPos, Character.Controlled.Position);
 
                         if (distance < 110f)
                             newNodePos = RoundNode(newPos, null) - sub.HiddenSubPosition;
                     }
 
+                    if (sub != null) { newNodePos -= sub.HiddenSubPosition; }
                     canPlaceNode = true;
 
                     //Do not place cable if you open some panel
@@ -291,7 +292,7 @@ namespace Barotrauma.Items.Components
                     if (user == null) return;
 
                     Vector2 prevNodePos = nodes[nodes.Count - 1];
-                    if (sub != null) prevNodePos += sub.HiddenSubPosition;
+                    if (sub != null) { prevNodePos += sub.HiddenSubPosition; }
 
                     float currLength = 0.0f;
                     for (int i = 0; i < nodes.Count - 1; i++)
