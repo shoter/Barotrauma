@@ -256,7 +256,18 @@ namespace Barotrauma.Items.Components
                 }
                 else
                 {
-                    newNodePos = RoundNode(item.Position, item.CurrentHull) - sub.HiddenSubPosition;
+                    Vector2 newPos = item.Position;
+
+                    if (item.ParentInventory?.Owner == Character.Controlled)
+                    {
+                        newPos = GameMain.GameScreen.Cam.ScreenToWorld(PlayerInput.MousePosition) - sub.Position;
+                        var distance = Vector2.Distance(newPos, Character.Controlled.Position);
+
+                        if (distance > 110f)
+                            newPos = item.Position;
+                    }
+
+                    newNodePos = RoundNode(newPos, item.CurrentHull) - sub.HiddenSubPosition;
                     canPlaceNode = true;
                 }
 
